@@ -1,0 +1,15 @@
+pandas>=2.2.3
+numpy>=1.26.4
+pyarrow>=14.0.0        # Parquet support for DataCleaner.save()
+
+# HTTP crawling
+requests>=2.32.3
+
+# Visualisation (notebook analysis)
+matplotlib>=3.10.0
+seaborn>=0.13.2
+
+# Jupyter notebook
+jupyter>=1.0.0
+notebook>=7.0.0
+ipykernel>=6.0.0
