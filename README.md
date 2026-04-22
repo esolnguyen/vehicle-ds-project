@@ -4,10 +4,10 @@ A data science pipeline for the **New Zealand NZTA Motor Vehicle Register (MVR)*
 
 ## What it does
 
-1. **Crawl** — downloads the NZTA "all vehicle years" fleet data and splits it into per-year CSVs.
-2. **Clean** — parses the `MVROpenData-Dictionary.csv` schema, coerces types, validates categorical codes, and deduplicates.
-3. **Analyse** — fleet composition, body type, make share, geography, motive power, EV share, fleet age, fuel consumption.
-4. **Forecast** — per-year EV adoption forecast using lag + rolling features and a Ridge regressor (with a naive baseline), evaluated via walk-forward backtesting.
+1. **Crawl** downloads the NZTA "all vehicle years" fleet data and splits it into per-year CSVs.
+2. **Clean** parses the `MVROpenData-Dictionary.csv` schema, coerces types, validates categorical codes, and deduplicates.
+3. **Analyse** fleet composition, body type, make share, geography, motive power, EV share, fleet age, fuel consumption.
+4. **Forecast** per-year EV adoption forecast using lag + rolling features and a Ridge regressor (with a naive baseline), evaluated via walk-forward backtesting.
 
 ## Project layout
 
@@ -25,8 +25,8 @@ A data science pipeline for the **New Zealand NZTA Motor Vehicle Register (MVR)*
 │       └── evaluator.py          Walk-forward backtest, MAE / RMSE / MAPE
 ├── notebooks/
 │   └── nz_vehicle_analysis.ipynb
-├── data/                         (created at runtime — gitignored)
-├── reports/                      (created at runtime — gitignored)
+├── data/                         (created at runtime gitignored)
+├── reports/                      (created at runtime gitignored)
 ├── run_pipeline.sh
 └── requirements.txt
 ```
@@ -66,8 +66,8 @@ python -m src.pipeline --output-dir reports/run_2026
 ```
 
 Outputs go to `reports/`:
-- `quality_report.csv` — per-column null rates, invalid categorical counts
-- `overview.txt` — dataset-level summary
+- `quality_report.csv` per-column null rates, invalid categorical counts
+- `overview.txt` dataset-level summary
 - 16× `*_distribution.csv` / analysis CSVs
 
 ### 3. Run the EV adoption forecasting pipeline
@@ -89,12 +89,12 @@ CLI options:
 | `--ridge-alpha` | `1.0` | L2 regularisation strength for the Ridge model |
 
 Outputs in `reports/ml/`:
-- `ev_yearly_series.csv` — per-year totals, EV counts, EV share
-- `features.csv` — lag + rolling feature matrix
-- `backtest_summary.csv` — MAE / RMSE / MAPE per model
-- `backtest_preds_<model>.csv` — per-fold predictions
-- `forecast.csv` — N-year forward forecast from best model
-- `overview.txt` — run summary
+- `ev_yearly_series.csv` per-year totals, EV counts, EV share
+- `features.csv` lag + rolling feature matrix
+- `backtest_summary.csv` MAE / RMSE / MAPE per model
+- `backtest_preds_<model>.csv` per-fold predictions
+- `forecast.csv` N-year forward forecast from best model
+- `overview.txt` run summary
 
 ## ML approach
 
@@ -103,8 +103,8 @@ Outputs in `reports/ml/`:
 **Features:** lagged EV share (1, 2, 3, 5 years), rolling mean & std over 3 and 5 years, `log(total)` as a denominator-size signal.
 
 **Models:**
-- `NaiveForecaster` — persistence baseline (`y_hat(t+k) = y(t)`)
-- `RidgeLagForecaster` — Ridge regression with `StandardScaler`, recursive multi-step forecast, output clipped to `[0, 1]`
+- `NaiveForecaster` persistence baseline (`y_hat(t+k) = y(t)`)
+- `RidgeLagForecaster` Ridge regression with `StandardScaler`, recursive multi-step forecast, output clipped to `[0, 1]`
 
 **Evaluation:** expanding-window walk-forward backtest with configurable horizon; models are ranked by MAE and the winner is refit on the full series for the forward forecast.
 
@@ -114,4 +114,4 @@ Python ≥ 3.10. Key dependencies: `pandas`, `numpy`, `pyarrow`, `scikit-learn`,
 
 ## Data source
 
-[NZTA Motor Vehicle Register open data](https://nzta.govt.nz/resources/open-data/) — NZ fleet composition, released quarterly.
+[NZTA Motor Vehicle Register open data](https://nzta.govt.nz/resources/open-data/) NZ fleet composition, released quarterly.
